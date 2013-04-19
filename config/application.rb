@@ -35,6 +35,12 @@ module Happymarketer
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
+    
+    config.generators do |g|
+      g.factory_girl false
+      g.template_engine :haml
+    end
+    
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]

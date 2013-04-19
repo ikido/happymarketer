@@ -1,4 +1,8 @@
 Happymarketer::Application.routes.draw do
+  root :to => 'tumblr_blogs#index'
+  
+  resources :tumblr_blogs, except: :show
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
