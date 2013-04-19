@@ -4,7 +4,7 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
-  # include CarrierWave::MiniMagick
+  include CarrierWave::MiniMagick
 
   # Include the Sprockets helpers for Rails 3.1+ asset pipeline compatibility:
   # include Sprockets::Helpers::RailsHelper
@@ -19,6 +19,41 @@ class ImageUploader < CarrierWave::Uploader::Base
   def store_dir
     "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
+  
+  version :to_post do
+    process :resize_to_fill => [500,500]
+    process :hipster_filter
+  end
+  
+  version :thumb do
+    process :resize_to_fill => [300,300]
+    process :hipster_filter
+  end
+  
+  def hipster_filter
+    manipulate! do |img|
+      cols, rows = img[:dimensions]
+
+      img.combine_options do |cmd|
+        cmd.auto_gamma
+        cmd.modulate '120,50,100'
+      end
+
+      new_img = img.clone
+      new_img.combine_options do |cmd|
+        cmd.fill 'rgba(227,195,129,0.3)'
+        cmd.draw "rectangle 0,0 #{cols},#{rows}"
+      end
+
+      img = img.composite new_img do |cmd|
+        cmd.compose 'multiply'
+      end
+
+      img = yield(img) if block_given?
+      img
+    end
+  end
+  
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
   # def default_url

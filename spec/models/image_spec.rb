@@ -80,4 +80,8 @@ describe Image do
       
     end
   end
+  
+  it "should calculate dominant colors from images"
+  
+  it "sould have named scope to sort images by color"
 end

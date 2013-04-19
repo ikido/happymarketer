@@ -39,6 +39,8 @@ describe TumblrBlog do
     
     it "is private"
     
+    it "should set errors when images could not be retrieved"
+    
     it "uses RSS::Parser" do
       
       require 'rss'

@@ -17,20 +17,71 @@ class TumblrBlog < ActiveRecord::Base
     save
   end
   
+  class << self
+    def update_all_images
+      self.where('images_updated_at < ? OR images_updated_at IS NULL', 6.hours.ago).each do |tb|
+        puts "updating #{tb.name}"
+        tb.update_images
+        puts "done"
+        sleep(10)
+      end
+    end
+    
+    def reprocess_all_images
+      self.all.each do |tb|
+        puts "reprocessing #{tb.name}"
+        tb.reprocess_images
+        puts "done"
+      end
+    end
+    
+    def publish_batch
+    end
+  end
+  
+  def reprocess_images
+    self.images.each { |i| i.data.recreate_versions! }
+  end
+  
 private
 
+  # TODO: now we simply deny images which are redirecting
+  
   def add_image_if_needed(image_url)
     unless self.images.exists?(url: image_url)
       image = self.images.create(url: image_url)        
-      image.upload_from_url
+      
+      begin
+        image.upload_from_url
+      rescue
+        image.deny!
+      end
+      
+      image.set_md5_sum
+      
+      if image.has_duplicate_md5_sum?
+        image.deny!
+      else              
+        image.set_dominant_color      
+      end
+      
+      image.save
     end
   end
+
+  # TODO: we ignore rss feeds that are redirecting for now
 
   def images_from_rss
     require 'rss'
 
-    images = []    
-    rss = RSS::Parser.parse(rss_url)
+    images = []
+    
+    begin  
+      rss = RSS::Parser.parse(rss_url)
+    rescue
+      return []
+    end
+    
     rss.items.each do |item|
       image_srcs_from_string(item.description).each { |i| images << i }
     end

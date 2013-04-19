@@ -12,6 +12,13 @@ gem 'htmlentities'
 gem 'nokogiri'
 gem 'carrierwave'
 gem "fog", "~> 1.3.1"
+gem 'vkontakte_api', '~> 1.1'
+gem "mime-types"
+gem 'mechanize'
+gem 'miro'
+gem "mini_magick"
+gem 'state_machine'
+gem 'kaminari'
 
 
 # Gems used only for assets and not required
@@ -22,6 +29,7 @@ group :assets do
   gem "therubyracer"
   gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
   gem "twitter-bootstrap-rails"
+  gem 'jquery-ui-rails'
 
   gem 'uglifier', '>= 1.0.3'
 end

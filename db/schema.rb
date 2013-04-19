@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130418184800) do
+ActiveRecord::Schema.define(:version => 20130419100728) do
 
   create_table "images", :force => true do |t|
     t.string   "url"
@@ -19,6 +19,9 @@ ActiveRecord::Schema.define(:version => 20130418184800) do
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
     t.string   "data"
+    t.integer  "dominant_color"
+    t.string   "md5_sum"
+    t.string   "state"
   end
 
   create_table "tumblr_blogs", :force => true do |t|

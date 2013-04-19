@@ -1,0 +1,11 @@
+.row-fluid
+  .span12
+    %ul.thumbnails
+      - @images.each do |i|
+        - unless i.data.blank?
+          %li.span3
+            .thumbnail.tumblr_image
+              = image_tag i.data.url(:thumb)
+              .caption.image-actions
+                = link_to deny_image_path(i), :class => 'btn btn-danger deny-image', :remote => true do
+                  %i.icon-trash.icon-white
